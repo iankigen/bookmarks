@@ -34,6 +34,15 @@
         {% endif %}
     </span>
 </div>
+{% if messages %}
+    <ul class="messages">
+        {% for msg in messages %}
+            <li class="{{ msg.tags }}">
+                {{ msg|safe }} <a href="" class="close">✖</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
 <div id="content">
     {% block content %}
     {% endblock %}
