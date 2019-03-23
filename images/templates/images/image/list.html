@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Bookmarked Images{% endblock %}
+
+{% block content %}
+    <h1>Bookmarked Images</h1>
+    <div id="image-list">
+        {% include 'images/image/list_ajax.html' %}
+    </div>
+{% endblock %}
+
+{% block domready %}
+      let page = 1;
+      let emptyPage = false;
+      let blockRequest = false;
+
+      $(window).scroll(function () {
+        let margin = $(document).height() - $(window).height() - 200;
+        if ($(window).scrollTop() > margin && emptyPage === false && blockRequest === false) {
+            blockRequest = true;
+            page += 1;
+            $.get('?page='+page, function (data) {
+              if(data === ''){
+                emptyPage = true;
+              }else {
+                blockRequest = false;
+                $('#image-list').append(data)
+              }
+            })
+        }
+      })
+{% endblock %}
