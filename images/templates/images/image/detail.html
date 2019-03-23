@@ -7,25 +7,56 @@
     {% load thumbnail %}
     {% thumbnail image.image '300' as im %}
         <a href="{{ image.image.url }}">
-            <img src="{{ im.url }}" class="image-detail">
+            <img src="{{ im.url }}" class="image-detail" alt="{{ image.title }}">
         </a>
     {% endthumbnail %}
-    {% with total_likes=image.users_like.count %}
+    {% with total_likes=image.users_like.count users_like=image.users_like.all %}
         <div class="image-info">
             <div>
                 <span class="count">
-                    {{ total_likes }} like{{ total_likes|pluralize }}
+                    <span class="total">{{ total_likes }}</span> like{{ total_likes|pluralize }}
                 </span>
+                <a href="#" data-id="{{ image.id }}"
+                   data-action="{% if request.user in users_like %}un{% endif %}like" class="like button">
+                    {% if request.user in users_like %}
+                        Unlike
+                    {% else %}
+                        Like
+                    {% endif %}
+                </a>
             </div>
             {{ image.description|linebreaks }}
         </div>
         <div class="image-likes">
             {% for user in image.users_like.all %}
-                <img src="{{ user.profile.photo.url }}" alt="{{ user.first_name }}">
-                <p>{{ user.first_name }}</p>
+                {% if user.profile.photo %}
+                    <img src="{{ user.profile.photo.url }}" alt="{{ user.first_name }}"> {{ user.first_name }}
+                {% endif %}
+                <br>
             {% empty %}
                 <p>Be the first to like</p>
             {% endfor %}
         </div>
     {% endwith %}
+{% endblock %}
+
+{% block domready %}
+      $('a.like').click(function (e) {
+        e.preventDefault();
+        $.post('{% url 'images:like' %}',
+          {
+            id: $(this).data('id'),
+            action: $(this).data('action'),
+          },
+          function (data) {
+            if (data['status'] == 'ok') {
+              let previous_action = $('a.like').data('action')
+              let previous_likes = parseInt($('span.count .total').text());
+              $('a.like').data('action', previous_action == 'like' ? 'unlike' : 'like');
+              $('a.like').text(previous_action == 'like' ? 'Unlike' : 'Like');
+              $('span.count .total').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
+            }
+          }
+        );
+      });
 {% endblock %}
