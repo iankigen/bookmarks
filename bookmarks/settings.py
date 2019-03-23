@@ -32,7 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
 	'account',
-	'images'
+	'images',
+	'sorl.thumbnail',
 ]
 
 INSTALLED_APPS += [
