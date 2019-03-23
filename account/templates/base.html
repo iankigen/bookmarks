@@ -48,4 +48,25 @@
     {% endblock %}
 </div>
 </body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+</script>
+<script>
+    let csrfToken = $.cookie('csrftoken');
+    function csrfSafeMethod(method){
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+      beforeSend: function (xhr, settings) {
+        if(!csrfSafeMethod(settings.type) && !this.crossDomain){
+            xhr.setRequestHeader('X-CSRFToken', csrfToken)
+        }
+      }
+    });
+    $(document).ready(function () {
+      {% block domready %}
+      {% endblock %}
+    })
+</script>
 </html>
