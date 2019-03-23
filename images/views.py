@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import ImageForm
+from .models import Image
 
 
 @login_required
@@ -19,3 +20,8 @@ def image_create(request):
 	else:
 		form = ImageForm(request.GET)
 		return render(request, 'images/image/create.html', {'form': form})
+
+
+def image_detail(request, id, slug):
+	image = get_object_or_404(Image, slug=slug, id=id)
+	return render(request, 'images/image/detail.html', {'image': image})
