@@ -34,6 +34,7 @@ INSTALLED_APPS = [
 	'account',
 	'images',
 	'sorl.thumbnail',
+	'graphene_django',
 ]
 
 INSTALLED_APPS += [
