@@ -137,3 +137,7 @@ if os.getenv('ENV', '') == 'development':
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+GRAPHENE = {
+	'SCHEMA': 'bookmarks.schema.schema'
+}
