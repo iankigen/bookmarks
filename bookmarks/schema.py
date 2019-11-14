@@ -1,9 +1,9 @@
 import graphene
-import images.schema
+from images.schema import Mutation, Query as ImageQuery
 
 
-class Query(images.schema.Query, graphene.ObjectType):
+class Query(ImageQuery, graphene.ObjectType):
 	pass
 
 
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=Query, mutation=Mutation)
